@@ -69,7 +69,7 @@ module PrivatePub
     # Returns the Faye Rack application.
     # Any options given are passed to the Faye::RackAdapter.
     def faye_app(options = {})
-      options = {:mount => "/faye", :timeout => 45, :extensions => [FayeExtension.new]}.merge(options)
+      options = {:mount => "/faye", :timeout => 45, :ping => 15, :extensions => [FayeExtension.new]}.merge(options)
       connection = Faye::RackAdapter.new(options)
       connection.on(:handshake) do |client_id|
         puts "Client #{client_id} handshake!"
@@ -81,7 +81,7 @@ module PrivatePub
         puts "Client #{client_id} leaves Channel: #{channel}!"
       end
       connection.on(:publish) do |client_id, channel, data|
-        puts "Client #{client_id} publishes #{data} to Channel: #{channel}!"
+        puts "#{client_id ? "Client #{client_id}": "Server"} publishes #{data} to Channel: #{channel}!"
       end
       connection.on(:disconnect) do |client_id|
         puts "Client #{client_id} is disconnected!"
