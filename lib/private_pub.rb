@@ -70,7 +70,11 @@ module PrivatePub
     # Any options given are passed to the Faye::RackAdapter.
     def faye_app(options = {})
       options = {:mount => "/faye", :timeout => 45, :extensions => [FayeExtension.new]}.merge(options)
-      Faye::RackAdapter.new(options)
+      connection = Faye::RackAdapter.new(options)
+      bayeux.on(:disconnect) do |client_id|
+        # event listener logic
+        puts "Client #{client_id} is disconnected!"
+      end
     end
   end
 
