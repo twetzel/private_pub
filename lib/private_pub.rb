@@ -75,6 +75,7 @@ module PrivatePub
         # event listener logic
         puts "Client #{client_id} is disconnected!"
       end
+      connection
     end
   end
 
