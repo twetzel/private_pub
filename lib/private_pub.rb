@@ -71,7 +71,7 @@ module PrivatePub
     def faye_app(options = {})
       options = {:mount => "/faye", :timeout => 45, :extensions => [FayeExtension.new]}.merge(options)
       connection = Faye::RackAdapter.new(options)
-      bayeux.on(:disconnect) do |client_id|
+      connection.on(:disconnect) do |client_id|
         # event listener logic
         puts "Client #{client_id} is disconnected!"
       end
