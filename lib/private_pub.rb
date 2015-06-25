@@ -71,10 +71,22 @@ module PrivatePub
     def faye_app(options = {})
       options = {:mount => "/faye", :timeout => 45, :extensions => [FayeExtension.new]}.merge(options)
       connection = Faye::RackAdapter.new(options)
+      connection.on(:handshake) do |client_id|
+        puts "Client #{client_id} handshake!"
+      end
+      connection.on(:subscribe) do |client_id, channel|
+        puts "Client #{client_id} subscribes Channel: #{channel}!"
+      end
+      connection.on(:unsubscribe) do |client_id,channel|
+        puts "Client #{client_id} leaves Channel: #{channel}!"
+      end
+      connection.on(:publish) do |client_id, channel, data|
+        puts "Client #{client_id} publishes #{data} to Channel: #{channel}!"
+      end
       connection.on(:disconnect) do |client_id|
-        # event listener logic
         puts "Client #{client_id} is disconnected!"
       end
+      
       connection
     end
   end
