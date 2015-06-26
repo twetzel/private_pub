@@ -67,7 +67,7 @@ module PrivatePub
     end
     
     def log_status( msg )
-      unless Rails.env.production?
+      unless config[:log_state]
         puts msg
       else
         true

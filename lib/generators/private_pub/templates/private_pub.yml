@@ -1,10 +1,13 @@
 development:
   server: "http://localhost:9292/faye"
   secret_token: "secret"
+  log_state: true
 test:
   server: "http://localhost:9292/faye"
   secret_token: "secret"
+  log_state: true
 production:
   server: "http://example.com/faye"
   secret_token: "<%= defined?(SecureRandom) ? SecureRandom.hex(32) : ActiveSupport::SecureRandom.hex(32) %>"
+  log_state: false
   signature_expiration: 3600 # one hour
