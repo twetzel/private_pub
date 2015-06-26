@@ -67,7 +67,7 @@ module PrivatePub
     end
     
     def log_status( msg )
-      unless config[:log_state]
+      if config[:log_state]
         puts msg
       else
         true
