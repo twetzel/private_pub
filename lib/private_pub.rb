@@ -65,6 +65,14 @@ module PrivatePub
     def signature_expired?(timestamp)
       timestamp < ((Time.now.to_f - config[:signature_expiration])*1000).round if config[:signature_expiration]
     end
+    
+    def log_status( msg )
+      unless Rails.env.production?
+        puts msg
+      else
+        true
+      end
+    end
 
     # Returns the Faye Rack application.
     # Any options given are passed to the Faye::RackAdapter.
@@ -72,19 +80,19 @@ module PrivatePub
       options = {:mount => "/faye", :timeout => 45, :ping => 15, :extensions => [FayeExtension.new]}.merge(options)
       connection = Faye::RackAdapter.new(options)
       connection.on(:handshake) do |client_id|
-        puts "Client #{client_id} handshake!"
+        log_status "Client #{client_id} handshake!"
       end
       connection.on(:subscribe) do |client_id, channel|
-        puts "Client #{client_id} subscribes Channel: #{channel}!"
+        log_status "Client #{client_id} subscribes Channel: #{channel}!"
       end
       connection.on(:unsubscribe) do |client_id,channel|
-        puts "Client #{client_id} leaves Channel: #{channel}!"
+        log_status "Client #{client_id} leaves Channel: #{channel}!"
       end
       connection.on(:publish) do |client_id, channel, data|
-        puts "#{client_id ? "Client #{client_id}": "Server"} publishes #{data} to Channel: #{channel}!"
+        log_status "#{client_id ? "Client #{client_id}": "Server"} publishes to Channel: #{channel}!"
       end
       connection.on(:disconnect) do |client_id|
-        puts "Client #{client_id} is disconnected!"
+        log_status "Client #{client_id} is disconnected!"
       end
       
       connection
