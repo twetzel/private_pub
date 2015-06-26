@@ -78,6 +78,7 @@ module PrivatePub
     # Any options given are passed to the Faye::RackAdapter.
     def faye_app(options = {})
       options = {:mount => "/faye", :timeout => 45, :ping => 15, :extensions => [FayeExtension.new]}.merge(options)
+      puts "Establish Faye Connection .. logging: #{ config[:log_state] }"
       connection = Faye::RackAdapter.new(options)
       connection.on(:handshake) do |client_id|
         log_status "Client #{client_id} handshake!"
